@@ -19,7 +19,7 @@ namespace pk3DS.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -11885,7 +11885,7 @@ namespace pk3DS.Properties {
         ///Mega Evolution Editor (MEE): SciresM
         ///OverWorld/Script Editor: Kaphotics &amp; FireFly
         ///Evolutions, Moves, Items, Maison, Title Screen Editors: Kaphotics
-        /// [rest of string was truncated]&quot;;.
+        ///ExeFS Editors: [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string changelog {
             get {

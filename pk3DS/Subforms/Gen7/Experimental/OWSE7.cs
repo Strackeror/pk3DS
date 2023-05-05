@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -12,40 +13,53 @@ namespace pk3DS
     public partial class OWSE7 : Form
     {
         private readonly LazyGARCFile EncounterData;
+        private readonly LazyGARCFile ZoneData;
+        private readonly LazyGARCFile WorldData;
+
+        private readonly ByteViewer byteViewer;
         //private readonly LazyGARCFile WorldData;
         // private readonly LazyGARCFile ZoneData;
         private readonly string[] itemlist = Main.Config.GetText(TextName.ItemNames);
 
-        public OWSE7(LazyGARCFile ed, LazyGARCFile zd)
+        public OWSE7(LazyGARCFile ed, LazyGARCFile zd, LazyGARCFile wd)
         {
             EncounterData = ed;
-            var ZoneData = zd;
-            //WorldData = wd;
+            ZoneData = zd;
+            WorldData = wd;
 
             locationList = Main.Config.GetText(TextName.metlist_000000);
             locationList = SMWE.GetGoodLocationList(locationList);
 
             InitializeComponent();
 
-            SetupDGV();
+            byteViewer = new ByteViewer();
+            byteViewer.Location = new System.Drawing.Point(226, 6);
+            byteViewer.Size = new System.Drawing.Size(400, 428);
+            byteViewer.Dock = DockStyle.Fill;
+            byteViewer.SetDisplayMode(DisplayMode.Hexdump);
+            hexPanel.Controls.Add(byteViewer);
 
-            var zdFiles = ZoneData.Files;
-            zoneData = zdFiles[0];
-            //worldData = zdFiles[1];
+            SetupDGV();
             LoadData();
         }
 
-        private readonly byte[] zoneData;
-        //private readonly byte[] worldData;
         private readonly string[] locationList;
 
         private void LoadData()
         {
-            // get zonedata array
-            var zd = ZoneData7.GetArray(zoneData);
+            var worlds = WorldData.Files.Select(f => Mini.UnpackMini(f, "WD")[0]).ToArray();
+            byte[][] zdfiles = ZoneData.Files;
+            var worldData = zdfiles[1];
+            var zoneData = zdfiles[0];
+            var zones = ZoneData7.GetZoneData7Array(zoneData, worldData, locationList, worlds);
 
-            string[] locations = zd.Select((z, i) => $"{i:000} - {locationList[z.ParentMap]}").ToArray();
-            CB_LocationID.Items.AddRange(locations);
+            var areas = new string[EncounterData.FileCount / 11];
+            for (int i = 0; i < areas.Length; ++i)
+            {
+                var names = String.Join(",", zones.Where(z => z.AreaIndex == i).Select((z) => locationList[z.ParentMap]));
+                areas[i] = $"{i:000} {names}";
+            }
+            CB_LocationID.Items.AddRange(areas);
             CB_LocationID.SelectedIndex = 0;
         }
 
@@ -73,7 +87,7 @@ namespace pk3DS
         private void GetEntry()
         {
             Console.WriteLine($"Loading {CB_LocationID.Text}");
-            int index = entry*11;
+            int index = entry * 11;
             // 00 - ED (???)
             // 01 - BG (???)
             // 02 - TR (???)
@@ -105,6 +119,7 @@ namespace pk3DS
             loading = false;
 
             LoadDGV();
+            LoadTree();
             NUD_7_Count_ValueChanged(NUD_7_Count, null);
             NUD_8_Count_ValueChanged(NUD_8_Count, null);
         }
@@ -124,10 +139,10 @@ namespace pk3DS
 
             public World(LazyGARCFile garc, int worldID)
             {
-                int index = worldID*11;
+                int index = worldID * 11;
                 _7 = Mini.UnpackMini(garc[index + 7], "ZS");
                 _8 = Mini.UnpackMini(garc[index + 8], "ZI");
-                
+
 
                 ZoneScripts = HasZS ? _7.Select(arr => new Script(arr)).ToArray() : Array.Empty<Script>();
                 ZoneInfoScripts = HasZI ? _8.Select(arr => new Script(arr)).ToArray() : Array.Empty<Script>();
@@ -149,7 +164,7 @@ namespace pk3DS
 
             public void WriteItems(LazyGARCFile garc, int worldID)
             {
-                int listId = 0;   
+                int listId = 0;
                 foreach (var itemData in _itemDataFull)
                 {
                     if (itemData.Length <= 0) continue;
@@ -185,6 +200,115 @@ namespace pk3DS
 
                 int index = item > 0 ? item : 1;
                 dgv.Rows[dgv.Rows.Count - 1].Cells[1].Value = itemlist[index];
+            }
+        }
+
+        record struct Entry(string name, int index, byte[] data)
+        {
+            public bool IsMini { get => name.All(c => c >= 'A' && c <= 'Z'); }
+        }
+        Dictionary<TreeNode, Entry> ENodeMap = new Dictionary<TreeNode, Entry>();
+
+        private TreeNode createNode(byte[] data, int index)
+        {
+            string name = "";
+            if (data.Length > 0 && data[0] >= 'A' && data[0] <= 'Z')
+            {
+                name = new string(new char[] { (char)data[0], (char)data[1] });
+            }
+            else
+            {
+                name = index.ToString();
+            }
+
+            var node = new TreeNode(name);
+            ENodeMap[node] = new Entry { name = name, index = index, data = data };
+            return node;
+        }
+
+        private void LoadTree()
+        {
+            treeView1.Nodes.Clear();
+            ENodeMap.Clear();
+            for (int i = 0; i < 11; ++i)
+            {
+                var node = createNode(EncounterData[entry * 11 + i], i);
+                treeView1.Nodes.Add(node);
+            }
+            treeView1.SelectedNode = treeView1.Nodes[0];
+        }
+
+        private void treeView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var selectedNode = treeView1.SelectedNode;
+            var selectedData = ENodeMap[selectedNode];
+            if (selectedNode.Nodes.Count > 0) return;
+            if (selectedData.IsMini)
+            {
+                var unpacked = Mini.UnpackMini(selectedData.data, selectedData.name);
+                int i = 0;
+                foreach (byte[] data in unpacked)
+                {
+                    var node = createNode(data, i++);
+                    selectedNode.Nodes.Add(node);
+                }
+            }
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            var selectedNode = treeView1.SelectedNode;
+            var selectedData = ENodeMap[selectedNode];
+            byteViewer.SetBytes(selectedData.data);
+            path_label.Text = selectedNode.FullPath;
+        }
+
+
+        private void button_Import_Click(object sender, EventArgs e)
+        {
+            var dialog = new OpenFileDialog();
+            var result = dialog.ShowDialog();
+            if (result != DialogResult.OK) return;
+
+            var newData = System.IO.File.ReadAllBytes(dialog.FileName);
+            var node = treeView1.SelectedNode;
+            ENodeMap[node] = ENodeMap[node] with { data = newData };
+            while (node != null)
+            {
+                var parent = node.Parent;
+                if (parent != null)
+                {
+                    var newDatas = parent.Nodes.Cast<TreeNode>().Select(n => ENodeMap[n].data).ToArray();
+                    ENodeMap[parent] = ENodeMap[parent] with { data = Mini.PackMini(newDatas, ENodeMap[parent].name) };
+                }
+                else
+                {
+                    EncounterData[entry * 11 + ENodeMap[node].index] = ENodeMap[node].data;
+                }
+                node = parent;
+            }
+            EncounterData.Save();
+        }
+
+        private void button_Export_Click(object sender, EventArgs e)
+        {
+            var dialog = new SaveFileDialog { FileName = CB_LocationID.Text + treeView1.SelectedNode.FullPath.Replace('\\', '.') };
+            var result = dialog.ShowDialog();
+            if (result != DialogResult.OK) return;
+            System.IO.File.WriteAllBytes(dialog.FileName, ENodeMap[treeView1.SelectedNode].data);
+        }
+
+
+        private void button_dump_Click(object sender, EventArgs e)
+        {
+            var dialog = new FolderBrowserDialog();
+            var result = dialog.ShowDialog();
+            if (result != DialogResult.OK) return;
+            byte[] bytes = new byte[] {};
+            for (int i = 0; i < 11; ++i)
+            {
+                var entry = ENodeMap[treeView1.Nodes[i]];
+                System.IO.File.WriteAllBytes(dialog.SelectedPath + "/" + entry.name, entry.data);
             }
         }
 
@@ -236,12 +360,15 @@ namespace pk3DS
             L_8_Info.Text = string.Join(Environment.NewLine, lines);
         }
 
+
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < dgv.Rows.Count; ++i) {
+            for (int i = 0; i < dgv.Rows.Count; ++i)
+            {
                 Map.Items[i] = Array.IndexOf(itemlist, dgv.Rows[i].Cells[1].Value);
             }
             Map.WriteItems(EncounterData, entry);
         }
+
     }
 }

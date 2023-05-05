@@ -907,12 +907,11 @@ namespace pk3DS
                 UpdateStatus($"GARC Get: {files[1]}... ");
                 var zd = Config.GetlzGARCData(files[1]);
                 UpdateStatus($"GARC Get: {files[2]}... ");
-                //var wd = Config.GetlzGARCData(files[2]);
+                var wd = Config.GetlzGARCData(files[2]);
 
                 var g = Config.GetGARCData("storytext");
                 string[][] tfiles = g.Files.Select(file => new TextFile(Config, file).Lines).ToArray();
-                Invoke((Action)(() => new TextEditor(tfiles, "storytext").Show()));
-                Invoke((Action)(() => new OWSE7(ed, zd).Show()));
+                Invoke((Action)(() => new OWSE7(ed, zd, wd).Show()));
                 while (Application.OpenForms.Count > 1)
                     Thread.Sleep(200);
                 Invoke((MethodInvoker)delegate { Enabled = true; });

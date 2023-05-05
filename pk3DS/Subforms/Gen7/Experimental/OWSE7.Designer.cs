@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.L_Location = new System.Windows.Forms.Label();
             this.CB_LocationID = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -51,6 +51,13 @@
             this.dgv = new System.Windows.Forms.DataGridView();
             this.dgvIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvItem = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.path_label = new System.Windows.Forms.Label();
+            this.button_Import = new System.Windows.Forms.Button();
+            this.button_Export = new System.Windows.Forms.Button();
+            this.hexPanel = new System.Windows.Forms.Panel();
+            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.button_dump = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tab_7_ZS.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_7_Count)).BeginInit();
@@ -58,6 +65,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.NUD_8_Count)).BeginInit();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // L_Location
@@ -76,7 +84,7 @@
             this.CB_LocationID.FormattingEnabled = true;
             this.CB_LocationID.Location = new System.Drawing.Point(46, 6);
             this.CB_LocationID.Name = "CB_LocationID";
-            this.CB_LocationID.Size = new System.Drawing.Size(164, 21);
+            this.CB_LocationID.Size = new System.Drawing.Size(311, 21);
             this.CB_LocationID.TabIndex = 432;
             this.CB_LocationID.SelectedIndexChanged += new System.EventHandler(this.CB_LocationID_SelectedIndexChanged);
             // 
@@ -88,10 +96,11 @@
             this.tabControl1.Controls.Add(this.tab_7_ZS);
             this.tabControl1.Controls.Add(this.tab_8_ZI);
             this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Location = new System.Drawing.Point(15, 33);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(460, 466);
+            this.tabControl1.Size = new System.Drawing.Size(660, 466);
             this.tabControl1.TabIndex = 434;
             // 
             // tab_7_ZS
@@ -105,7 +114,7 @@
             this.tab_7_ZS.Location = new System.Drawing.Point(4, 22);
             this.tab_7_ZS.Name = "tab_7_ZS";
             this.tab_7_ZS.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_7_ZS.Size = new System.Drawing.Size(452, 440);
+            this.tab_7_ZS.Size = new System.Drawing.Size(652, 440);
             this.tab_7_ZS.TabIndex = 0;
             this.tab_7_ZS.Text = "7.ZS";
             this.tab_7_ZS.UseVisualStyleBackColor = true;
@@ -128,7 +137,7 @@
             this.RTB_7_Parse.Location = new System.Drawing.Point(208, 207);
             this.RTB_7_Parse.Name = "RTB_7_Parse";
             this.RTB_7_Parse.ReadOnly = true;
-            this.RTB_7_Parse.Size = new System.Drawing.Size(238, 225);
+            this.RTB_7_Parse.Size = new System.Drawing.Size(438, 225);
             this.RTB_7_Parse.TabIndex = 437;
             this.RTB_7_Parse.Text = "Script CMDs";
             // 
@@ -169,7 +178,7 @@
             this.RTB_7_Raw.Location = new System.Drawing.Point(6, 6);
             this.RTB_7_Raw.Name = "RTB_7_Raw";
             this.RTB_7_Raw.ReadOnly = true;
-            this.RTB_7_Raw.Size = new System.Drawing.Size(440, 195);
+            this.RTB_7_Raw.Size = new System.Drawing.Size(640, 195);
             this.RTB_7_Raw.TabIndex = 430;
             this.RTB_7_Raw.Text = "Raw Data";
             // 
@@ -184,7 +193,7 @@
             this.tab_8_ZI.Location = new System.Drawing.Point(4, 22);
             this.tab_8_ZI.Name = "tab_8_ZI";
             this.tab_8_ZI.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_8_ZI.Size = new System.Drawing.Size(452, 440);
+            this.tab_8_ZI.Size = new System.Drawing.Size(652, 440);
             this.tab_8_ZI.TabIndex = 1;
             this.tab_8_ZI.Text = "8.ZI";
             this.tab_8_ZI.UseVisualStyleBackColor = true;
@@ -207,7 +216,7 @@
             this.RTB_8_Parse.Location = new System.Drawing.Point(208, 207);
             this.RTB_8_Parse.Name = "RTB_8_Parse";
             this.RTB_8_Parse.ReadOnly = true;
-            this.RTB_8_Parse.Size = new System.Drawing.Size(238, 225);
+            this.RTB_8_Parse.Size = new System.Drawing.Size(438, 225);
             this.RTB_8_Parse.TabIndex = 438;
             this.RTB_8_Parse.Text = "Script CMDs";
             // 
@@ -248,7 +257,7 @@
             this.RTB_8_Raw.Location = new System.Drawing.Point(6, 6);
             this.RTB_8_Raw.Name = "RTB_8_Raw";
             this.RTB_8_Raw.ReadOnly = true;
-            this.RTB_8_Raw.Size = new System.Drawing.Size(440, 195);
+            this.RTB_8_Raw.Size = new System.Drawing.Size(640, 195);
             this.RTB_8_Raw.TabIndex = 432;
             this.RTB_8_Raw.Text = "Raw Data";
             // 
@@ -259,7 +268,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(452, 440);
+            this.tabPage1.Size = new System.Drawing.Size(652, 440);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Items";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -290,13 +299,13 @@
             this.dgvItem});
             this.dgv.Location = new System.Drawing.Point(6, 6);
             this.dgv.Name = "dgv";
-            this.dgv.Size = new System.Drawing.Size(440, 392);
+            this.dgv.Size = new System.Drawing.Size(640, 392);
             this.dgv.TabIndex = 2;
             // 
             // dgvIndex
             // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.dgvIndex.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.dgvIndex.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvIndex.HeaderText = "Index";
             this.dgvIndex.Name = "dgvIndex";
             this.dgvIndex.ReadOnly = true;
@@ -309,11 +318,89 @@
             this.dgvItem.Name = "dgvItem";
             this.dgvItem.Width = 135;
             // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.path_label);
+            this.tabPage2.Controls.Add(this.button_Import);
+            this.tabPage2.Controls.Add(this.button_Export);
+            this.tabPage2.Controls.Add(this.hexPanel);
+            this.tabPage2.Controls.Add(this.treeView1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(652, 440);
+            this.tabPage2.TabIndex = 3;
+            this.tabPage2.Text = "Experimental";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // path_label
+            // 
+            this.path_label.AutoSize = true;
+            this.path_label.Location = new System.Drawing.Point(229, 14);
+            this.path_label.Name = "path_label";
+            this.path_label.Size = new System.Drawing.Size(35, 13);
+            this.path_label.TabIndex = 4;
+            this.path_label.Text = "label1";
+            // 
+            // button_Import
+            // 
+            this.button_Import.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_Import.Location = new System.Drawing.Point(481, 6);
+            this.button_Import.Name = "button_Import";
+            this.button_Import.Size = new System.Drawing.Size(80, 28);
+            this.button_Import.TabIndex = 3;
+            this.button_Import.Text = "Import";
+            this.button_Import.UseVisualStyleBackColor = true;
+            this.button_Import.Click += new System.EventHandler(this.button_Import_Click);
+            // 
+            // button_Export
+            // 
+            this.button_Export.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_Export.Location = new System.Drawing.Point(566, 6);
+            this.button_Export.Name = "button_Export";
+            this.button_Export.Size = new System.Drawing.Size(80, 28);
+            this.button_Export.TabIndex = 2;
+            this.button_Export.Text = "Export";
+            this.button_Export.UseVisualStyleBackColor = true;
+            this.button_Export.Click += new System.EventHandler(this.button_Export_Click);
+            // 
+            // hexPanel
+            // 
+            this.hexPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.hexPanel.Location = new System.Drawing.Point(229, 40);
+            this.hexPanel.Name = "hexPanel";
+            this.hexPanel.Size = new System.Drawing.Size(417, 394);
+            this.hexPanel.TabIndex = 1;
+            // 
+            // treeView1
+            // 
+            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.treeView1.Location = new System.Drawing.Point(6, 6);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(217, 428);
+            this.treeView1.TabIndex = 0;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.treeView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseDoubleClick);
+            // 
+            // button_dump
+            // 
+            this.button_dump.Location = new System.Drawing.Point(585, 6);
+            this.button_dump.Name = "button_dump";
+            this.button_dump.Size = new System.Drawing.Size(89, 28);
+            this.button_dump.TabIndex = 435;
+            this.button_dump.Text = "Dump";
+            this.button_dump.UseVisualStyleBackColor = true;
+            this.button_dump.Click += new System.EventHandler(this.button_dump_Click);
+            // 
             // OWSE7
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 511);
+            this.ClientSize = new System.Drawing.Size(684, 511);
+            this.Controls.Add(this.button_dump);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.L_Location);
             this.Controls.Add(this.CB_LocationID);
@@ -328,6 +415,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.NUD_8_Count)).EndInit();
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -356,5 +445,12 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvIndex;
         private System.Windows.Forms.DataGridViewComboBoxColumn dgvItem;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.Panel hexPanel;
+        private System.Windows.Forms.Button button_Import;
+        private System.Windows.Forms.Button button_Export;
+        private System.Windows.Forms.Label path_label;
+        private System.Windows.Forms.Button button_dump;
     }
 }
