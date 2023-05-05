@@ -28,28 +28,36 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.L_Location = new System.Windows.Forms.Label();
             this.CB_LocationID = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tab_7_ZS = new System.Windows.Forms.TabPage();
+            this.L_7_Info = new System.Windows.Forms.Label();
             this.RTB_7_Parse = new System.Windows.Forms.RichTextBox();
             this.NUD_7_Count = new System.Windows.Forms.NumericUpDown();
             this.L_7_Count = new System.Windows.Forms.Label();
             this.RTB_7_Script = new System.Windows.Forms.RichTextBox();
             this.RTB_7_Raw = new System.Windows.Forms.RichTextBox();
             this.tab_8_ZI = new System.Windows.Forms.TabPage();
+            this.L_8_Info = new System.Windows.Forms.Label();
             this.RTB_8_Parse = new System.Windows.Forms.RichTextBox();
             this.NUD_8_Count = new System.Windows.Forms.NumericUpDown();
             this.L_8_Count = new System.Windows.Forms.Label();
             this.RTB_8_Script = new System.Windows.Forms.RichTextBox();
             this.RTB_8_Raw = new System.Windows.Forms.RichTextBox();
-            this.L_7_Info = new System.Windows.Forms.Label();
-            this.L_8_Info = new System.Windows.Forms.Label();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
+            this.dgv = new System.Windows.Forms.DataGridView();
+            this.dgvIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvItem = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.tabControl1.SuspendLayout();
             this.tab_7_ZS.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_7_Count)).BeginInit();
             this.tab_8_ZI.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_8_Count)).BeginInit();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.SuspendLayout();
             // 
             // L_Location
@@ -79,6 +87,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tab_7_ZS);
             this.tabControl1.Controls.Add(this.tab_8_ZI);
+            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Location = new System.Drawing.Point(15, 33);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -100,6 +109,15 @@
             this.tab_7_ZS.TabIndex = 0;
             this.tab_7_ZS.Text = "7.ZS";
             this.tab_7_ZS.UseVisualStyleBackColor = true;
+            // 
+            // L_7_Info
+            // 
+            this.L_7_Info.AutoSize = true;
+            this.L_7_Info.Location = new System.Drawing.Point(137, 246);
+            this.L_7_Info.Name = "L_7_Info";
+            this.L_7_Info.Size = new System.Drawing.Size(41, 13);
+            this.L_7_Info.TabIndex = 438;
+            this.L_7_Info.Text = "Count7";
             // 
             // RTB_7_Parse
             // 
@@ -171,6 +189,15 @@
             this.tab_8_ZI.Text = "8.ZI";
             this.tab_8_ZI.UseVisualStyleBackColor = true;
             // 
+            // L_8_Info
+            // 
+            this.L_8_Info.AutoSize = true;
+            this.L_8_Info.Location = new System.Drawing.Point(137, 246);
+            this.L_8_Info.Name = "L_8_Info";
+            this.L_8_Info.Size = new System.Drawing.Size(41, 13);
+            this.L_8_Info.TabIndex = 439;
+            this.L_8_Info.Text = "Count8";
+            // 
             // RTB_8_Parse
             // 
             this.RTB_8_Parse.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -225,23 +252,62 @@
             this.RTB_8_Raw.TabIndex = 432;
             this.RTB_8_Raw.Text = "Raw Data";
             // 
-            // L_7_Info
+            // tabPage1
             // 
-            this.L_7_Info.AutoSize = true;
-            this.L_7_Info.Location = new System.Drawing.Point(137, 246);
-            this.L_7_Info.Name = "L_7_Info";
-            this.L_7_Info.Size = new System.Drawing.Size(41, 13);
-            this.L_7_Info.TabIndex = 438;
-            this.L_7_Info.Text = "Count7";
+            this.tabPage1.Controls.Add(this.button1);
+            this.tabPage1.Controls.Add(this.dgv);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(452, 440);
+            this.tabPage1.TabIndex = 2;
+            this.tabPage1.Text = "Items";
+            this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // L_8_Info
+            // button1
             // 
-            this.L_8_Info.AutoSize = true;
-            this.L_8_Info.Location = new System.Drawing.Point(137, 246);
-            this.L_8_Info.Name = "L_8_Info";
-            this.L_8_Info.Size = new System.Drawing.Size(41, 13);
-            this.L_8_Info.TabIndex = 439;
-            this.L_8_Info.Text = "Count8";
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button1.Location = new System.Drawing.Point(6, 404);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 30);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "Save";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.buttonSave_Click);
+            // 
+            // dgv
+            // 
+            this.dgv.AllowUserToAddRows = false;
+            this.dgv.AllowUserToDeleteRows = false;
+            this.dgv.AllowUserToResizeColumns = false;
+            this.dgv.AllowUserToResizeRows = false;
+            this.dgv.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgvIndex,
+            this.dgvItem});
+            this.dgv.Location = new System.Drawing.Point(6, 6);
+            this.dgv.Name = "dgv";
+            this.dgv.Size = new System.Drawing.Size(440, 392);
+            this.dgv.TabIndex = 2;
+            // 
+            // dgvIndex
+            // 
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.dgvIndex.DefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvIndex.HeaderText = "Index";
+            this.dgvIndex.Name = "dgvIndex";
+            this.dgvIndex.ReadOnly = true;
+            this.dgvIndex.Width = 45;
+            // 
+            // dgvItem
+            // 
+            this.dgvItem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.dgvItem.HeaderText = "Item";
+            this.dgvItem.Name = "dgvItem";
+            this.dgvItem.Width = 135;
             // 
             // OWSE7
             // 
@@ -260,6 +326,8 @@
             this.tab_8_ZI.ResumeLayout(false);
             this.tab_8_ZI.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_8_Count)).EndInit();
+            this.tabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -283,5 +351,10 @@
         private System.Windows.Forms.RichTextBox RTB_8_Parse;
         private System.Windows.Forms.Label L_7_Info;
         private System.Windows.Forms.Label L_8_Info;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.DataGridView dgv;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvIndex;
+        private System.Windows.Forms.DataGridViewComboBoxColumn dgvItem;
+        private System.Windows.Forms.Button button1;
     }
 }

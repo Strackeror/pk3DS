@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -13,6 +14,7 @@ namespace pk3DS
         private readonly LazyGARCFile EncounterData;
         //private readonly LazyGARCFile WorldData;
         // private readonly LazyGARCFile ZoneData;
+        private readonly string[] itemlist = Main.Config.GetText(TextName.ItemNames);
 
         public OWSE7(LazyGARCFile ed, LazyGARCFile zd)
         {
@@ -24,6 +26,8 @@ namespace pk3DS
             locationList = SMWE.GetGoodLocationList(locationList);
 
             InitializeComponent();
+
+            SetupDGV();
 
             var zdFiles = ZoneData.Files;
             zoneData = zdFiles[0];
@@ -100,6 +104,7 @@ namespace pk3DS
             NUD_8_Count.Value = Math.Min(Map.ZoneInfoScripts.Length, 1);
             loading = false;
 
+            LoadDGV();
             NUD_7_Count_ValueChanged(NUD_7_Count, null);
             NUD_8_Count_ValueChanged(NUD_8_Count, null);
         }
@@ -108,20 +113,78 @@ namespace pk3DS
         {
             private readonly byte[][] _7;
             private readonly byte[][] _8;
+            private readonly byte[][] _envData;
+            private readonly byte[][] _itemDataFull;
 
             private bool HasZS => _7 != null;
             private bool HasZI => _8 != null;
             public readonly Script[] ZoneScripts;
             public readonly Script[] ZoneInfoScripts;
+            public List<int> Items;
 
             public World(LazyGARCFile garc, int worldID)
             {
                 int index = worldID*11;
                 _7 = Mini.UnpackMini(garc[index + 7], "ZS");
                 _8 = Mini.UnpackMini(garc[index + 8], "ZI");
+                
 
                 ZoneScripts = HasZS ? _7.Select(arr => new Script(arr)).ToArray() : Array.Empty<Script>();
                 ZoneInfoScripts = HasZI ? _8.Select(arr => new Script(arr)).ToArray() : Array.Empty<Script>();
+
+                _envData = Mini.UnpackMini(garc[index], "ED");
+                _itemDataFull = Mini.UnpackMini(_envData[10], "EI");
+                List<int> items = new List<int>();
+                foreach (var itemData in _itemDataFull)
+                {
+                    if (itemData.Length <= 0) continue;
+                    int count = itemData[0];
+                    for (int i = 0; i < count; ++i)
+                    {
+                        items.Add(BitConverter.ToInt16(itemData, i * 64 + 52));
+                    }
+                }
+                Items = items;
+            }
+
+            public void WriteItems(LazyGARCFile garc, int worldID)
+            {
+                int listId = 0;   
+                foreach (var itemData in _itemDataFull)
+                {
+                    if (itemData.Length <= 0) continue;
+                    int count = itemData[0];
+                    for (int i = 0; i < count; ++i)
+                    {
+                        var bytes = BitConverter.GetBytes((short)Items[listId]);
+                        int dataId = i * 64 + 52;
+                        itemData[dataId] = bytes[0];
+                        itemData[dataId + 1] = bytes[1];
+                        listId += 1;
+                    }
+                }
+                _envData[10] = Mini.PackMini(_itemDataFull, "EI");
+                garc[worldID * 11] = Mini.PackMini(_envData, "ED");
+                garc.Save();
+            }
+        }
+
+        private void SetupDGV()
+        {
+            foreach (string t in itemlist)
+                dgvItem.Items.Add(t);
+        }
+
+        private void LoadDGV()
+        {
+            dgv.Rows.Clear();
+            foreach (int item in Map.Items)
+            {
+                dgv.Rows.Add();
+                dgv.Rows[dgv.Rows.Count - 1].Cells[0].Value = dgv.Rows.Count - 1;
+
+                int index = item > 0 ? item : 1;
+                dgv.Rows[dgv.Rows.Count - 1].Cells[1].Value = itemlist[index];
             }
         }
 
@@ -171,6 +234,14 @@ namespace pk3DS
                 "CBytes:" + Environment.NewLine + script.CompressedBytes.Length,
             };
             L_8_Info.Text = string.Join(Environment.NewLine, lines);
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < dgv.Rows.Count; ++i) {
+                Map.Items[i] = Array.IndexOf(itemlist, dgv.Rows[i].Cells[1].Value);
+            }
+            Map.WriteItems(EncounterData, entry);
         }
     }
 }
