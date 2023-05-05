@@ -28,7 +28,7 @@ namespace pk3DS.Core.CTR
 
         public void GetSuperBlockHash()
         {
-            using var sha = new SHA256Managed();
+            using var sha = SHA256.Create();
             SuperBlockHash = sha.ComputeHash(Data, 0, 0x200);
         }
 

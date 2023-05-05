@@ -371,7 +371,7 @@ namespace pk3DS.Core.CTR
                 long hashBaseOfs = (long)Align((ulong)OutFileStream.Position, ivfc.Levels[2].BlockSize);
                 long hOfs = (long)Align(MasterHashLen, ivfc.Levels[0].BlockSize);
                 long cOfs = hashBaseOfs + (long)ivfc.Levels[1].HashOffset;
-                SHA256Managed sha = new SHA256Managed();
+                var sha = SHA256.Create();
                 for (int i = ivfc.Levels.Length - 1; i >= 0; i--)
                 {
                     UpdateTB(TB_Progress, "Computing Level " + i + " Hashes...");
