@@ -237,22 +237,48 @@ namespace pk3DS
             }
             treeView1.SelectedNode = treeView1.Nodes[0];
         }
-
-        private void treeView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void SaveNode(TreeNode node)
         {
-            var selectedNode = treeView1.SelectedNode;
-            var selectedData = ENodeMap[selectedNode];
-            if (selectedNode.Nodes.Count > 0) return;
+            while (node != null)
+            {
+                if (!ENodeMap[node].IsMini) {
+                    node = node.Parent;
+                    continue;
+                }
+
+                var newDatas = node.Nodes.Cast<TreeNode>().Select(n => ENodeMap[n].data).ToArray();
+                ENodeMap[node] = ENodeMap[node] with { data = Mini.PackMini(newDatas, ENodeMap[node].name) };
+
+                var parent = node.Parent;
+                if (parent == null)
+                {
+                    EncounterData[entry * 11 + ENodeMap[node].index] = ENodeMap[node].data;
+                }
+                node = parent;
+            }
+            EncounterData.Save();
+        }
+
+        private void BuildNode(TreeNode node)
+        {
+            node.Nodes.Clear();
+            var selectedData = ENodeMap[node];
             if (selectedData.IsMini)
             {
                 var unpacked = Mini.UnpackMini(selectedData.data, selectedData.name);
                 int i = 0;
                 foreach (byte[] data in unpacked)
                 {
-                    var node = createNode(data, i++);
-                    selectedNode.Nodes.Add(node);
+                    var newNode = createNode(data, i++);
+                    node.Nodes.Add(newNode);
                 }
             }
+        }
+
+
+        private void treeView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            BuildNode(treeView1.SelectedNode);
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -260,9 +286,33 @@ namespace pk3DS
             var selectedNode = treeView1.SelectedNode;
             var selectedData = ENodeMap[selectedNode];
             byteViewer.SetBytes(selectedData.data);
+            byteViewer.SetStartLine(0);
             path_label.Text = selectedNode.FullPath;
         }
 
+        private void button_Add_Click(object sender, EventArgs e)
+        {
+            var selectedNode = treeView1.SelectedNode;
+            var data = ENodeMap[selectedNode];
+            if (!data.IsMini) return;
+            int index = selectedNode.Nodes.Count - 1;
+            var newEntry = new Entry(index.ToString(), index, new byte[] { });
+
+            var newNode = new TreeNode(newEntry.name);
+            ENodeMap[newNode] = newEntry;
+            selectedNode.Nodes.Add(newNode);
+            SaveNode(newNode);
+        }
+
+        private void button_Remove_Click(object sender, EventArgs e)
+        {
+            var selectedNode = treeView1.SelectedNode;
+            if (selectedNode.Parent == null) return;
+            var parent = selectedNode.Parent;
+            parent.Nodes.Remove(selectedNode);
+            SaveNode(parent);
+            BuildNode(parent);
+        }
 
         private void button_Import_Click(object sender, EventArgs e)
         {
@@ -273,22 +323,10 @@ namespace pk3DS
             var newData = System.IO.File.ReadAllBytes(dialog.FileName);
             var node = treeView1.SelectedNode;
             ENodeMap[node] = ENodeMap[node] with { data = newData };
-            while (node != null)
-            {
-                var parent = node.Parent;
-                if (parent != null)
-                {
-                    var newDatas = parent.Nodes.Cast<TreeNode>().Select(n => ENodeMap[n].data).ToArray();
-                    ENodeMap[parent] = ENodeMap[parent] with { data = Mini.PackMini(newDatas, ENodeMap[parent].name) };
-                }
-                else
-                {
-                    EncounterData[entry * 11 + ENodeMap[node].index] = ENodeMap[node].data;
-                }
-                node = parent;
-            }
-            EncounterData.Save();
+            BuildNode(node);
+            SaveNode(node);
         }
+
 
         private void button_Export_Click(object sender, EventArgs e)
         {
@@ -304,7 +342,7 @@ namespace pk3DS
             var dialog = new FolderBrowserDialog();
             var result = dialog.ShowDialog();
             if (result != DialogResult.OK) return;
-            byte[] bytes = new byte[] {};
+            byte[] bytes = new byte[] { };
             for (int i = 0; i < 11; ++i)
             {
                 var entry = ENodeMap[treeView1.Nodes[i]];

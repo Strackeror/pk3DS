@@ -58,6 +58,8 @@
             hexPanel = new System.Windows.Forms.Panel();
             treeView1 = new System.Windows.Forms.TreeView();
             button_dump = new System.Windows.Forms.Button();
+            button_Add = new System.Windows.Forms.Button();
+            button_Remove = new System.Windows.Forms.Button();
             tabControl1.SuspendLayout();
             tab_7_ZS.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)NUD_7_Count).BeginInit();
@@ -326,6 +328,8 @@
             // 
             // tabPage2
             // 
+            tabPage2.Controls.Add(button_Remove);
+            tabPage2.Controls.Add(button_Add);
             tabPage2.Controls.Add(path_label);
             tabPage2.Controls.Add(button_Import);
             tabPage2.Controls.Add(button_Export);
@@ -386,10 +390,10 @@
             // treeView1
             // 
             treeView1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            treeView1.Location = new System.Drawing.Point(7, 7);
+            treeView1.Location = new System.Drawing.Point(8, 46);
             treeView1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             treeView1.Name = "treeView1";
-            treeView1.Size = new System.Drawing.Size(252, 493);
+            treeView1.Size = new System.Drawing.Size(252, 455);
             treeView1.TabIndex = 0;
             treeView1.AfterSelect += treeView1_AfterSelect;
             treeView1.MouseDoubleClick += treeView1_MouseDoubleClick;
@@ -400,11 +404,31 @@
             button_dump.Location = new System.Drawing.Point(682, 7);
             button_dump.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             button_dump.Name = "button_dump";
-            button_dump.Size = new System.Drawing.Size(104, 32);
+            button_dump.Size = new System.Drawing.Size(104, 28);
             button_dump.TabIndex = 435;
             button_dump.Text = "Dump";
             button_dump.UseVisualStyleBackColor = true;
             button_dump.Click += button_dump_Click;
+            // 
+            // button_Add
+            // 
+            button_Add.Location = new System.Drawing.Point(7, 7);
+            button_Add.Name = "button_Add";
+            button_Add.Size = new System.Drawing.Size(75, 33);
+            button_Add.TabIndex = 5;
+            button_Add.Text = "Add";
+            button_Add.UseVisualStyleBackColor = true;
+            button_Add.Click += button_Add_Click;
+            // 
+            // button_Remove
+            // 
+            button_Remove.Location = new System.Drawing.Point(88, 7);
+            button_Remove.Name = "button_Remove";
+            button_Remove.Size = new System.Drawing.Size(75, 33);
+            button_Remove.TabIndex = 6;
+            button_Remove.Text = "Remove";
+            button_Remove.UseVisualStyleBackColor = true;
+            button_Remove.Click += button_Remove_Click;
             // 
             // OWSE7
             // 
@@ -463,5 +487,7 @@
         private System.Windows.Forms.Button button_Export;
         private System.Windows.Forms.Label path_label;
         private System.Windows.Forms.Button button_dump;
+        private System.Windows.Forms.Button button_Add;
+        private System.Windows.Forms.Button button_Remove;
     }
 }
